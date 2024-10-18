@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dragon Ball Quiz</string>
+
+    <!-- Welcome Fragment -->
+    <string name="welcome_title">¡Bienvenido al Quiz de Dragon Ball!</string>
+    <string name="welcome_description">Pon a prueba tus conocimientos sobre el mundo de Dragon Ball</string>
+    <string name="welcome_details">• 10 preguntas\n• 30 segundos por pregunta\n• ¡Demuestra tu poder!</string>
+    <string name="start_button">¡Comenzar!</string>
+
+    <!-- Question Fragment -->
+    <string name="next_button">Siguiente</string>
+    <string name="time_remaining">Tiempo restante: %1$d s</string>
+    <string name="question_progress">Pregunta %1$d de %2$d</string>
+
+    <!-- Answer Fragment -->
+    <string name="correct_answer">¡Respuesta Correcta!</string>
+    <string name="wrong_answer">¡Respuesta Incorrecta!</string>
+    <string name="continue_button">Continuar</string>
+    <string name="explanation_label">Explicación:</string>
+
+    <!-- Result -->
+    <string name="game_over">¡Juego Terminado!</string>
+    <string name="final_score">Puntuación Final: %1$d/%2$d</string>
+    <string name="restart_button">Jugar de Nuevo</string>
+    <string name="results">Resultados</string>
+    <string name="restart_quiz">Reiniciar Quiz</string>
+
+    <!-- Questions -->
+    <string-array name="questions">
+        <item>¿Me revelo?</item>
+        <item>¿Cuál es la técnica característica de Goku?</item>
+        <item>¿Quién es el príncipe de los Saiyajin?</item>
+        <item>¿Cuál es el nombre del maestro de Goku en su infancia?</item>
+        <item>¿Qué personaje fusiona a Goku y Vegeta con los pendientes Potara?</item>
+        <item>¿Cuál es el nombre del hijo mayor de Goku?</item>
+    </string-array>
+
+    <string-array name="answers">
+        <item>Sí, que se revele|Goku eta vaina se revelo|Perense esta a punto de revelarse|Vaya revelacion</item>
+        <item>Kamehameha|Final Flash|Masenko|Galick Gun</item>
+        <item>Vegeta|Goku|Broly|Raditz</item>
+        <item>Maestro Roshi|Maestro Karin|Rey Kai|Mr. Popo</item>
+        <item>Vegito|Gogeta|Gotenks|Zamasu</item>
+        <item>Gohan|Goten|Trunks|Pan</item>
+        <item>Gohan|Goten|Trunks|</item>
+    </string-array>
+
+    <string-array name="correct_answers">
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+    </string-array>
+
+    <string-array name="explanations">
+        <item>Se reveló.</item>
+        <item>El Kamehameha es la técnica insignia de Goku, aprendida del Maestro Roshi.</item>
+        <item>Vegeta es el príncipe de los Saiyajin, último heredero del planeta Vegeta.</item>
+        <item>El Maestro Roshi fue quien entrenó a Goku en su infancia en Kame House.</item>
+        <item>Vegito es la fusión de Goku y Vegeta usando los pendientes Potara.</item>
+        <item>Gohan es el primer hijo de Goku y Chi-Chi.</item>
+        <item>Me revelo?</item>
+    </string-array>
+</resources>
