@@ -29,7 +29,7 @@ class ResultFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.score.observe(viewLifecycleOwner) { score ->
-            binding.scoreTextView.text = getString(R.string.final_score, score, 5) // Asumiendo 5 preguntas totales
+            binding.scoreTextView.text = getString(R.string.final_score, score, 6) // Cant de preguntas
         }
 
         binding.restartButton.setOnClickListener {

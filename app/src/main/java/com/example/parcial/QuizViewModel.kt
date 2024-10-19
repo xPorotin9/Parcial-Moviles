@@ -19,9 +19,6 @@ class QuizViewModel : ViewModel() {
     private val _timeRemaining = MutableLiveData(30)
     val timeRemaining: LiveData<Int> = _timeRemaining
 
-    private val _gameFinished = MutableLiveData(false)
-    val gameFinished: LiveData<Boolean> = _gameFinished
-
     private val _currentQuestionIndex = MutableLiveData(0)
     val currentQuestionIndex: LiveData<Int> = _currentQuestionIndex
 
@@ -30,15 +27,25 @@ class QuizViewModel : ViewModel() {
 
     private var timerJob: Job? = null
     private var questions: List<Question> = listOf()
-    private lateinit var context: Context
+
+    // Listade imágenes para cada pregunta
+    private val questionImages = listOf(
+        R.drawable.revelo,
+        R.drawable.sadala,
+        R.drawable.patrulla,
+        R.drawable.mono,
+        R.drawable.jiren,
+        R.drawable.esencia
+    )
 
     fun initialize(context: Context) {
-        this.context = context
-        loadQuestions()
+        if (questions.isEmpty()) {
+            loadQuestions(context)
+        }
         startNewGame()
     }
 
-    private fun loadQuestions() {
+    private fun loadQuestions(context: Context) {
         val questionTexts = context.resources.getStringArray(R.array.questions)
         val answersList = context.resources.getStringArray(R.array.answers)
         val correctAnswers = context.resources.getStringArray(R.array.correct_answers)
@@ -49,7 +56,8 @@ class QuizViewModel : ViewModel() {
                 questionText = questionText,
                 options = answersList[index].split("|"),
                 correctAnswerIndex = correctAnswers[index].toInt(),
-                explanation = explanations[index]
+                explanation = explanations[index],
+                imageResId = questionImages[index]
             )
         }
     }
@@ -57,7 +65,6 @@ class QuizViewModel : ViewModel() {
     fun startNewGame() {
         _score.value = 0
         _currentQuestionIndex.value = 0
-        _gameFinished.value = false
         loadCurrentQuestion()
     }
 
@@ -66,8 +73,6 @@ class QuizViewModel : ViewModel() {
             if (index < questions.size) {
                 _currentQuestion.value = questions[index]
                 startTimer()
-            } else {
-                _gameFinished.value = true
             }
         }
     }
@@ -80,11 +85,11 @@ class QuizViewModel : ViewModel() {
                 delay(1000)
                 _timeRemaining.value = _timeRemaining.value!! - 1
             }
-            timeOut()
+            handleTimeOut()
         }
     }
 
-    private fun timeOut() {
+    private fun handleTimeOut() {
         _currentQuestion.value?.let { question ->
             _answerResult.value = AnswerResult(
                 isCorrect = false,

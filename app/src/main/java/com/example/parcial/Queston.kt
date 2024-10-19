@@ -4,5 +4,6 @@ data class Question(
     val questionText: String,
     val options: List<String>,
     val correctAnswerIndex: Int,
-    val explanation: String
+    val explanation: String,
+    val imageResId: Int
 )

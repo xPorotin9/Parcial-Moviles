@@ -41,21 +41,12 @@ class QuestionFragment : Fragment() {
         musicManager.startMusic()
     }
 
-    override fun onPause() {
-        super.onPause()
-        musicManager.pauseMusic()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        musicManager.resumeMusic()
-    }
-
     private fun setupObservers() {
         viewModel.currentQuestion.observe(viewLifecycleOwner) { question ->
             binding.questionTextView.text = question.questionText
-            binding.answersRadioGroup.removeAllViews()
+            binding.questionImageView.setImageResource(question.imageResId)
 
+            binding.answersRadioGroup.removeAllViews()
             question.options.forEachIndexed { index, option ->
                 val radioButton = RadioButton(context).apply {
                     id = index
@@ -65,7 +56,7 @@ class QuestionFragment : Fragment() {
                         RadioGroup.LayoutParams.MATCH_PARENT,
                         RadioGroup.LayoutParams.WRAP_CONTENT
                     ).apply {
-                        topMargin = 8
+                        topMargin = 16
                     }
                 }
                 binding.answersRadioGroup.addView(radioButton)
@@ -78,9 +69,7 @@ class QuestionFragment : Fragment() {
         }
 
         viewModel.currentQuestionIndex.observe(viewLifecycleOwner) { index ->
-            val totalQuestions = 6 // O el número total de preguntas que tengas
-            binding.progressTextView.text = getString(R.string.question_progress, index + 1, totalQuestions)
-            binding.questionProgressBar.progress = ((index + 1) * 100) / totalQuestions
+            binding.progressTextView.text = getString(R.string.question_progress, index + 1, 6)
         }
 
         viewModel.answerResult.observe(viewLifecycleOwner) { result ->
@@ -119,7 +108,7 @@ class QuestionFragment : Fragment() {
             .setMessage(message)
             .setPositiveButton("Continuar") { dialog, _ ->
                 dialog.dismiss()
-                if (viewModel.currentQuestionIndex.value!! < 4) { // 4 es el índice de la última pregunta (total 5)
+                if (viewModel.currentQuestionIndex.value!! < 5) {
                     viewModel.moveToNextQuestion()
                 } else {
                     findNavController().navigate(R.id.action_questionFragment_to_resultFragment)
@@ -127,6 +116,16 @@ class QuestionFragment : Fragment() {
             }
             .setCancelable(false)
             .show()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        musicManager.pauseMusic()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        musicManager.resumeMusic()
     }
 
     override fun onDestroyView() {
