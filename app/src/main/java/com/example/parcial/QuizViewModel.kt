@@ -28,12 +28,10 @@ class QuizViewModel : ViewModel() {
     private var timerJob: Job? = null
     private var questions: List<Question> = listOf()
 
-    // Listade imágenes para cada pregunta
     private val questionImages = listOf(
         R.drawable.revelo,
-        R.drawable.sadala,
-        R.drawable.patrulla,
-        R.drawable.mono,
+        R.drawable.cell,
+        R.drawable.vegeta,
         R.drawable.jiren,
         R.drawable.esencia
     )

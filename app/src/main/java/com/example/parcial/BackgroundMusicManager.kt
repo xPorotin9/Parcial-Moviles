@@ -17,17 +17,31 @@ class BackgroundMusicManager private constructor(private val context: Context) {
         }
     }
 
-    fun startMusic() {
-        if (mediaPlayer == null) {
-            mediaPlayer = MediaPlayer.create(context, R.raw.quiz_music)
-            mediaPlayer?.isLooping = true
-        }
+    fun startMusic(resourceId: Int) {
+        stopMusic() // Detener cualquier música anterior
+        mediaPlayer = MediaPlayer.create(context, resourceId)
+        mediaPlayer?.isLooping = true
         mediaPlayer?.start()
     }
 
+    fun playOneShot(resourceId: Int) {
+        stopMusic() // Detener cualquier música anterior
+        mediaPlayer = MediaPlayer.create(context, resourceId)
+        mediaPlayer?.isLooping = false
+        mediaPlayer?.start()
+        mediaPlayer?.setOnCompletionListener { mp ->
+            mp.release()
+            mediaPlayer = null
+        }
+    }
+
     fun stopMusic() {
-        mediaPlayer?.stop()
-        mediaPlayer?.release()
+        mediaPlayer?.apply {
+            if (isPlaying) {
+                stop()
+            }
+            release()
+        }
         mediaPlayer = null
     }
 

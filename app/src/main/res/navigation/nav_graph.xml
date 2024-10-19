@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/welcomeFragment"
         android:name="com.example.parcial.WelcomeFragment"
-        android:label="Welcome">
+        android:label="Parcial">
         <action
             android:id="@+id/action_welcomeFragment_to_questionFragment"
             app:destination="@id/questionFragment" />
@@ -16,7 +16,7 @@
     <fragment
         android:id="@+id/questionFragment"
         android:name="com.example.parcial.QuestionFragment"
-        android:label="Question">
+        android:label="Preguntas">
         <action
             android:id="@+id/action_questionFragment_to_resultFragment"
             app:destination="@id/resultFragment" />
@@ -25,7 +25,7 @@
     <fragment
         android:id="@+id/resultFragment"
         android:name="com.example.parcial.ResultFragment"
-        android:label="Result">
+        android:label="Resultado">
         <action
             android:id="@+id/action_resultFragment_to_welcomeFragment"
             app:destination="@id/welcomeFragment"

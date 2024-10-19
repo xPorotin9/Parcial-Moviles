@@ -5,7 +5,7 @@
     <!-- Welcome Fragment -->
     <string name="welcome_title">¡Bienvenido al Quiz de Dragon Ball!</string>
     <string name="welcome_description">Desmuestra que no eres alguien de clase baja</string>
-    <string name="welcome_details">• 10 preguntas\n• 30 segundos por pregunta\n• Responde bien puem</string>
+    <string name="welcome_details">• 5 preguntas\n• 30 segundos por pregunta\n• Responde bien puem</string>
     <string name="start_button">Empezar</string>
 
     <!-- Question Fragment -->
@@ -29,41 +29,41 @@
     <!-- Preguntas -->
     <string-array name="questions">
         <item>¿Me revelo?</item>
-        <item>¿Cómo se llama el saiyajin que destruye al planeta Sadala en el Universo 6?</item>
-        <item>¿Cuál es el nombre del androide que trabaja para la Patrulla Galáctica en la saga de Moro?</item>
+        <item>¿Como es que derrotan a Cell?</item>
 
-        <item>¿Cómo se llama el poder que el Maestro Roshi utiliza para contener a Vegeta Ozaru en Dragon Ball Z?</item>
-        <item>¿Cuál es el nombre real de Jiren, el guerrero más fuerte del Universo 11?</item>
+        <item>¿Qué hace Vegeta cuando Goku llega para enfrentarse a Freezer en Namek?</item>
+        <item>¿Cuál es el nombre del guerrero más fuerte del Universo 11?</item>
         <item>¿Cual es la cancion de la verdadera ESENCIA?</item>
+
     </string-array>
 
     <string-array name="answers">
         <item>Sí, que se revele|Goku eta vaina se revelo|Perense esta a punto de revelarse|Vaya revelacion</item>
-        <item>Cabba|Vegeta|Kale|Yamoshi</item>
-        <item>Androide 17|Androide 19|Androide 73|Androide 8</item>
+        <item>Goku se sacrifica|Gohan lo derrota|Goku y Vegeta cantando|Androide 16 lo detona</item>
 
-        <item>Kamehameha|Mafuba|Onda Glacial|Rayo Mortal</item>
+        <item>Se une a Goku para luchar contra Freezer|Intenta escapar del planeta|Canta|Le pide que derrote a Freezer por los saiyajines</item>
         <item>Belmod|Jiren Torres|Gabriel|Dayshinkan</item>
+
         <item>Bring me to life|In the end|Numb|It s my life</item>
     </string-array>
 
     <string-array name="correct_answers">
         <item>0</item>
-        <item>3</item>
-        <item>2</item>
+        <item>1</item>
 
+        <item>3</item>
         <item>1</item>
-        <item>1</item>
+
         <item>0</item>
     </string-array>
 
     <string-array name="explanations">
         <item>Terrible revelación.</item>
-        <item>Yamoshi es el legendario primer Super Saiyajin Dios, cuyo espíritu fue clave en la transformación de Goku en la Batalla de los Dioses.</item>
-        <item>Androide 73 es un villano capaz de copiar las habilidades de sus oponentes, apareciendo en la saga de Moro como un peligroso aliado del antagonista..</item>
+        <item>Gohan, tras alcanzar el Super Saiyajin 2, vence a Cell en un enfrentamiento final de Kamehamehas, con la ayuda de Goku y Vegeta.</item>
 
-        <item>El Mafuba es una técnica utilizada por el Maestro Roshi para sellar a seres poderosos, aunque en este caso falla al intentar detener a Vegeta.</item>
+        <item>Vegeta, gravemente herido, le suplica a Goku que venza a Freezer para vengar a los saiyajines y liberar su orgullo, poco antes de morir a manos de Freezer.</item>
         <item>Jiren es el guerrero más fuerte del Universo 11 y uno de los rivales más poderosos que Goku enfrenta en el Torneo del Poder.</item>
+
         <item>7 palabras... E S E N C I A</item>
 
     </string-array>

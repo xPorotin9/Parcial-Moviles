@@ -19,6 +19,14 @@ class QuestionFragment : Fragment() {
     private val viewModel: QuizViewModel by activityViewModels()
     private lateinit var musicManager: BackgroundMusicManager
 
+    private val questionSounds = arrayOf(
+        R.raw.merevelo,
+        R.raw.ando,
+        R.raw.bellaco,
+        R.raw.once,
+        R.raw.esencia
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         musicManager = BackgroundMusicManager.getInstance(requireContext())
@@ -38,7 +46,9 @@ class QuestionFragment : Fragment() {
         viewModel.initialize(requireContext())
         setupObservers()
         setupListeners()
-        musicManager.startMusic()
+
+        // Reproducir el audio de la primera pregunta inmediatamente
+        playCurrentQuestionSound()
     }
 
     private fun setupObservers() {
@@ -70,10 +80,19 @@ class QuestionFragment : Fragment() {
 
         viewModel.currentQuestionIndex.observe(viewLifecycleOwner) { index ->
             binding.progressTextView.text = getString(R.string.question_progress, index + 1, 6)
+            playCurrentQuestionSound()
         }
 
         viewModel.answerResult.observe(viewLifecycleOwner) { result ->
             showAnswerResult(result)
+        }
+    }
+
+    private fun playCurrentQuestionSound() {
+        viewModel.currentQuestionIndex.value?.let { index ->
+            if (index < questionSounds.size) {
+                musicManager.playOneShot(questionSounds[index])
+            }
         }
     }
 
@@ -108,7 +127,8 @@ class QuestionFragment : Fragment() {
             .setMessage(message)
             .setPositiveButton("Continuar") { dialog, _ ->
                 dialog.dismiss()
-                if (viewModel.currentQuestionIndex.value!! < 5) {
+                musicManager.stopMusic()
+                if (viewModel.currentQuestionIndex.value!! < 4) {
                     viewModel.moveToNextQuestion()
                 } else {
                     findNavController().navigate(R.id.action_questionFragment_to_resultFragment)
@@ -125,11 +145,12 @@ class QuestionFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        musicManager.resumeMusic()
+        // No llamamos a resumeMusic() aquí porque estamos usando playOneShot
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        musicManager.stopMusic()
     }
 }

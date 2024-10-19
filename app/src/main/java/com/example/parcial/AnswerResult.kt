@@ -4,5 +4,5 @@ data class AnswerResult(
     val isCorrect: Boolean,
     val correctAnswer: String,
     val explanation: String,
-    val timeOut: Boolean
+    val timeOut: Boolean = false
 )
