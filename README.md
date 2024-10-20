@@ -1,4 +1,4 @@
-# Repositorio exclusivo 
+# Repositorio parcial 
 Repositorio exclusivamente dirigido para proyecto parcial (Juego de preguntas y respuestas).
 
 ## Implementaciónes
