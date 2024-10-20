@@ -10,6 +10,7 @@ class BackgroundMusicManager private constructor(private val context: Context) {
         @Volatile
         private var instance: BackgroundMusicManager? = null
 
+        // Singleton para obtener una instancia de la clase
         fun getInstance(context: Context): BackgroundMusicManager {
             return instance ?: synchronized(this) {
                 instance ?: BackgroundMusicManager(context.applicationContext).also { instance = it }
@@ -17,6 +18,7 @@ class BackgroundMusicManager private constructor(private val context: Context) {
         }
     }
 
+    // Inicia la música de fondo en bucle
     fun startMusic(resourceId: Int) {
         stopMusic()
         mediaPlayer = MediaPlayer.create(context, resourceId)
@@ -24,6 +26,7 @@ class BackgroundMusicManager private constructor(private val context: Context) {
         mediaPlayer?.start()
     }
 
+    // Reproduce un sonido una sola vez
     fun playOneShot(resourceId: Int) {
         stopMusic()
         mediaPlayer = MediaPlayer.create(context, resourceId)
@@ -35,6 +38,7 @@ class BackgroundMusicManager private constructor(private val context: Context) {
         }
     }
 
+    // Detiene la música actual
     fun stopMusic() {
         mediaPlayer?.apply {
             if (isPlaying) {
@@ -45,10 +49,12 @@ class BackgroundMusicManager private constructor(private val context: Context) {
         mediaPlayer = null
     }
 
+    // Pausa la música
     fun pauseMusic() {
         mediaPlayer?.pause()
     }
 
+    // Reanuda la música pausada
     fun resumeMusic() {
         mediaPlayer?.start()
     }

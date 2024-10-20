@@ -22,11 +22,17 @@ import com.google.android.material.snackbar.Snackbar
 import com.example.parcial.databinding.FragmentQuestionBinding
 
 class QuestionFragment : Fragment() {
+    // Binding para acceder a los elementos del layout
     private var _binding: FragmentQuestionBinding? = null
     private val binding get() = _binding!!
+
+    // ViewModel para gestionar el estado del quiz
     private val viewModel: QuizViewModel by activityViewModels()
+
+    // Manager de música de fondo
     private lateinit var musicManager: BackgroundMusicManager
 
+    // Lista de sonidos para cada pregunta
     private val questionSounds = arrayOf(
         R.raw.merevelo,
         R.raw.ando,
@@ -35,9 +41,11 @@ class QuestionFragment : Fragment() {
         R.raw.esencia
     )
 
+    // Solicitador de permisos de vibración
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
+        // Si el permiso es concedido, se proporciona feedback por vibración
         if (isGranted) {
             provideErrorFeedback()
         }
@@ -45,6 +53,7 @@ class QuestionFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Inicializa el manager de música
         musicManager = BackgroundMusicManager.getInstance(requireContext())
     }
 
@@ -59,20 +68,25 @@ class QuestionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Configura la barra de progreso del temporizador
         binding.timeProgressBar.max = 30
         binding.timeProgressBar.progress = 30
 
+        // Inicializa el ViewModel y configura los observadores
         viewModel.initialize(requireContext())
         setupObservers()
         setupListeners()
-        playCurrentQuestionSound()
+        playCurrentQuestionSound() // Reproduce el sonido de la pregunta actual
     }
 
+    // Configura los observadores para los LiveData en el ViewModel
     private fun setupObservers() {
+        // Observa la pregunta actual y actualiza la UI
         viewModel.currentQuestion.observe(viewLifecycleOwner) { question ->
             binding.questionTextView.text = question.questionText
             binding.questionImageView.setImageResource(question.imageResId)
 
+            // Limpia y actualiza las opciones de respuesta en los radio buttons
             binding.answersRadioGroup.removeAllViews()
             question.options.forEachIndexed { index, option ->
                 val radioButton = RadioButton(context).apply {
@@ -82,33 +96,35 @@ class QuestionFragment : Fragment() {
                     layoutParams = RadioGroup.LayoutParams(
                         RadioGroup.LayoutParams.MATCH_PARENT,
                         RadioGroup.LayoutParams.WRAP_CONTENT
-                    ).apply {
-                        topMargin = 16
-                    }
+                    ).apply { topMargin = 16 }
                 }
                 binding.answersRadioGroup.addView(radioButton)
             }
             binding.answersRadioGroup.clearCheck()
         }
 
+        // Observa el tiempo restante y actualiza el temporizador en pantalla
         viewModel.timeRemaining.observe(viewLifecycleOwner) { timeRemaining ->
             binding.timerTextView.text = getString(R.string.time_remaining, timeRemaining)
             binding.timeProgressBar.progress = timeRemaining
         }
 
+        // Observa el índice de la pregunta actual para cambiar de sonido y actualizar la UI
         viewModel.currentQuestionIndex.observe(viewLifecycleOwner) { index ->
             binding.progressTextView.text = getString(R.string.question_progress, index + 1, 6)
-            playCurrentQuestionSound()
-            binding.answersRadioGroup.clearCheck()
+            playCurrentQuestionSound() // Cambia el sonido de la pregunta
+            binding.answersRadioGroup.clearCheck() // Limpia la selección
         }
 
+        // Observa el resultado de la respuesta
         viewModel.answerResult.observe(viewLifecycleOwner) { result ->
             if (result != null) {
-                showAnswerResult(result)
+                showAnswerResult(result) // Muestra el resultado de la respuesta
             }
         }
     }
 
+    // Reproduce el sonido de la pregunta actual
     private fun playCurrentQuestionSound() {
         viewModel.currentQuestionIndex.value?.let { index ->
             if (index < questionSounds.size) {
@@ -117,34 +133,40 @@ class QuestionFragment : Fragment() {
         }
     }
 
+    // Configura los listeners de los botones
     private fun setupListeners() {
         binding.nextButton.setOnClickListener {
             val selectedAnswerId = binding.answersRadioGroup.checkedRadioButtonId
             if (selectedAnswerId != -1) {
-                viewModel.submitAnswer(selectedAnswerId)
+                viewModel.submitAnswer(selectedAnswerId) // Envia la respuesta seleccionada
             } else {
-                checkVibrationPermissionAndProvideErrorFeedback()
+                checkVibrationPermissionAndProvideErrorFeedback() // Verifica permisos para vibrar si no hay selección
             }
         }
     }
 
+    // Verifica si el permiso de vibración está concedido y lo solicita si es necesario
     private fun checkVibrationPermissionAndProvideErrorFeedback() {
         when {
+            // Si ya tiene el permiso, proporciona feedback
             ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.VIBRATE
             ) == PackageManager.PERMISSION_GRANTED -> {
                 provideErrorFeedback()
             }
+            // Si debe mostrar una explicación del permiso
             shouldShowRequestPermissionRationale(Manifest.permission.VIBRATE) -> {
                 showPermissionRationaleDialog()
             }
+            // Si no, solicita el permiso
             else -> {
                 requestPermissionLauncher.launch(Manifest.permission.VIBRATE)
             }
         }
     }
 
+    // Muestra un diálogo explicando por qué se necesita el permiso de vibración
     private fun showPermissionRationaleDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Permiso necesario")
@@ -159,8 +181,9 @@ class QuestionFragment : Fragment() {
             .show()
     }
 
+    // Proporciona feedback táctil al usuario en caso de error
     private fun provideErrorFeedback() {
-        showErrorSnackbar()
+        showErrorSnackbar() // Muestra un mensaje de error
 
         try {
             val vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
@@ -171,10 +194,11 @@ class QuestionFragment : Fragment() {
                 vibrator.vibrate(200)
             }
         } catch (e: Exception) {
-            // Si hay algún problema con la vibración, al menos el Snackbar se mostrará
+            // Si hay un problema con la vibración, al menos se muestra el Snackbar
         }
     }
 
+    // Muestra un Snackbar cuando el usuario no selecciona una respuesta
     private fun showErrorSnackbar() {
         Snackbar.make(
             binding.root,
@@ -187,6 +211,7 @@ class QuestionFragment : Fragment() {
         }.show()
     }
 
+    // Avanza a la siguiente pregunta o al fragmento de resultados
     private fun moveToNextQuestion() {
         binding.answersRadioGroup.clearCheck()
         if (viewModel.currentQuestionIndex.value!! < 4) {
@@ -196,6 +221,7 @@ class QuestionFragment : Fragment() {
         }
     }
 
+    // Muestra el resultado de la respuesta en un diálogo
     private fun showAnswerResult(result: AnswerResult) {
         val title = when {
             result.timeOut -> "Muy lento chamo"
@@ -217,21 +243,24 @@ class QuestionFragment : Fragment() {
             .setPositiveButton("Continuar") { dialog, _ ->
                 dialog.dismiss()
                 musicManager.stopMusic()
-                moveToNextQuestion()
+                moveToNextQuestion() // Pasa a la siguiente pregunta
             }
             .setCancelable(false)
             .show()
     }
 
+    // Pausa la música cuando el fragmento está en pausa
     override fun onPause() {
         super.onPause()
         musicManager.pauseMusic()
     }
 
+    // Reanuda la música cuando el fragmento está en primer plano
     override fun onResume() {
         super.onResume()
     }
 
+    // Libera los recursos y detiene la música cuando el fragmento se destruye
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

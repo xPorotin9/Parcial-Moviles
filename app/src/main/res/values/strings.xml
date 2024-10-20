@@ -25,7 +25,7 @@
     <string name="restart_button">Jugar de Nuevo</string>
     <string name="results">Resultados</string>
     <string name="restart_quiz">Reiniciar Quiz</string>
-
+    <string name="share_result">Compartir</string>
     <!-- Preguntas -->
     <string-array name="questions">
         <item>¿Me revelo?</item>
