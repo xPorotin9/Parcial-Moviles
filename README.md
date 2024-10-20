@@ -1,6 +1,7 @@
 # Repositorio parcial 
 Repositorio exclusivamente dirigido para proyecto parcial (Juego de preguntas y respuestas).
-
+## Tema del parcial
+- Preguntas sobre el universo de Dragon Ball (mayormente contiene memes pero las respuestas son de la historia de Dragon Ball), en los cuales se dará una puntuación por respuestas correctas y dará un resultado diferente para cada caso.
 ## Implementaciónes
 - Imagen de referencia por cada pregunta
 - Resultado diferente dependiendo de la cantidad de aciertos 
