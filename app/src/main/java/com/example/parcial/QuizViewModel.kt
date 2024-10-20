@@ -10,13 +10,15 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class QuizViewModel : ViewModel() {
+    private val TIMER_MAX_SECONDS = 30
+
     private val _currentQuestion = MutableLiveData<Question>()
     val currentQuestion: LiveData<Question> = _currentQuestion
 
     private val _score = MutableLiveData(0)
     val score: LiveData<Int> = _score
 
-    private val _timeRemaining = MutableLiveData(30)
+    private val _timeRemaining = MutableLiveData(TIMER_MAX_SECONDS)
     val timeRemaining: LiveData<Int> = _timeRemaining
 
     private val _currentQuestionIndex = MutableLiveData(0)
@@ -70,36 +72,45 @@ class QuizViewModel : ViewModel() {
         _currentQuestionIndex.value?.let { index ->
             if (index < questions.size) {
                 _currentQuestion.value = questions[index]
-                startTimer()
+                resetAndStartTimer()
             }
         }
     }
 
-    private fun startTimer() {
+    private fun resetAndStartTimer() {
         timerJob?.cancel()
-        _timeRemaining.value = 30
+        _timeRemaining.value = TIMER_MAX_SECONDS
+        startTimer()
+    }
+
+    private fun startTimer() {
         timerJob = viewModelScope.launch {
-            while (_timeRemaining.value!! > 0) {
-                delay(1000)
-                _timeRemaining.value = _timeRemaining.value!! - 1
+            try {
+                while (_timeRemaining.value!! > 0) {
+                    delay(1000)
+                    _timeRemaining.postValue(_timeRemaining.value!! - 1)
+                }
+                handleTimeOut()
+            } catch (e: Exception) {
+                // Manejar cualquier excepción que pueda ocurrir durante la cuenta regresiva
             }
-            handleTimeOut()
         }
     }
 
     private fun handleTimeOut() {
         _currentQuestion.value?.let { question ->
-            _answerResult.value = AnswerResult(
+            _answerResult.postValue(AnswerResult(
                 isCorrect = false,
                 correctAnswer = question.options[question.correctAnswerIndex],
                 explanation = question.explanation,
                 timeOut = true
-            )
+            ))
         }
     }
 
     fun submitAnswer(selectedAnswerIndex: Int) {
         timerJob?.cancel()
+
         _currentQuestion.value?.let { question ->
             val isCorrect = selectedAnswerIndex == question.correctAnswerIndex
             if (isCorrect) {

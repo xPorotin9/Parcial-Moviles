@@ -43,6 +43,11 @@ class QuestionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Configurar el ProgressBar
+        binding.timeProgressBar.max = 30
+        binding.timeProgressBar.progress = 30
+
         viewModel.initialize(requireContext())
         setupObservers()
         setupListeners()
@@ -79,7 +84,7 @@ class QuestionFragment : Fragment() {
         }
 
         viewModel.currentQuestionIndex.observe(viewLifecycleOwner) { index ->
-            binding.progressTextView.text = getString(R.string.question_progress, index + 1, 6)
+            binding.progressTextView.text = getString(R.string.question_progress, index + 1, 5)
             playCurrentQuestionSound()
         }
 
