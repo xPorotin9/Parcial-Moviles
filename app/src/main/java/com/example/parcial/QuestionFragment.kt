@@ -43,16 +43,12 @@ class QuestionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Configurar el ProgressBar
         binding.timeProgressBar.max = 30
         binding.timeProgressBar.progress = 30
 
         viewModel.initialize(requireContext())
         setupObservers()
         setupListeners()
-
-        // Reproducir el audio de la primera pregunta inmediatamente
         playCurrentQuestionSound()
     }
 
@@ -84,12 +80,14 @@ class QuestionFragment : Fragment() {
         }
 
         viewModel.currentQuestionIndex.observe(viewLifecycleOwner) { index ->
-            binding.progressTextView.text = getString(R.string.question_progress, index + 1, 5)
+            binding.progressTextView.text = getString(R.string.question_progress, index + 1, 6)
             playCurrentQuestionSound()
         }
 
         viewModel.answerResult.observe(viewLifecycleOwner) { result ->
-            showAnswerResult(result)
+            if (result != null) {
+                showAnswerResult(result)
+            }
         }
     }
 
@@ -116,7 +114,7 @@ class QuestionFragment : Fragment() {
         val title = when {
             result.timeOut -> "Muy lento chamo"
             result.isCorrect -> "Tan cerebro!?"
-            else -> "No se sabes!"
+            else -> "No le sabes"
         }
 
         val message = buildString {
@@ -150,7 +148,6 @@ class QuestionFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // No llamamos a resumeMusic() aquí porque estamos usando playOneShot
     }
 
     override fun onDestroyView() {

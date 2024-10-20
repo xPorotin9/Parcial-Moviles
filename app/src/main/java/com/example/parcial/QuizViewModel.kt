@@ -24,8 +24,8 @@ class QuizViewModel : ViewModel() {
     private val _currentQuestionIndex = MutableLiveData(0)
     val currentQuestionIndex: LiveData<Int> = _currentQuestionIndex
 
-    private val _answerResult = MutableLiveData<AnswerResult>()
-    val answerResult: LiveData<AnswerResult> = _answerResult
+    private val _answerResult = MutableLiveData<AnswerResult?>()
+    val answerResult: LiveData<AnswerResult?> = _answerResult
 
     private var timerJob: Job? = null
     private var questions: List<Question> = listOf()
@@ -65,6 +65,7 @@ class QuizViewModel : ViewModel() {
     fun startNewGame() {
         _score.value = 0
         _currentQuestionIndex.value = 0
+        _answerResult.value = null
         loadCurrentQuestion()
     }
 
@@ -92,7 +93,7 @@ class QuizViewModel : ViewModel() {
                 }
                 handleTimeOut()
             } catch (e: Exception) {
-                // Manejar cualquier excepción que pueda ocurrir durante la cuenta regresiva
+                // Manejar excepciones
             }
         }
     }
@@ -128,6 +129,7 @@ class QuizViewModel : ViewModel() {
 
     fun moveToNextQuestion() {
         _currentQuestionIndex.value = _currentQuestionIndex.value!! + 1
+        _answerResult.value = null
         loadCurrentQuestion()
     }
 

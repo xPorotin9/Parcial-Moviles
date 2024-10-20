@@ -29,12 +29,10 @@ class WelcomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Iniciar la música del menú principal
         musicManager.startMusic(R.raw.quiz_music)
 
         binding.startButton.setOnClickListener {
-            musicManager.stopMusic() // Detener la música antes de navegar
+            musicManager.stopMusic()
             findNavController().navigate(R.id.action_welcomeFragment_to_questionFragment)
         }
     }

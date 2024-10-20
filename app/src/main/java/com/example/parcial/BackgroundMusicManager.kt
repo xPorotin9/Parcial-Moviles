@@ -18,14 +18,14 @@ class BackgroundMusicManager private constructor(private val context: Context) {
     }
 
     fun startMusic(resourceId: Int) {
-        stopMusic() // Detener cualquier música anterior
+        stopMusic()
         mediaPlayer = MediaPlayer.create(context, resourceId)
         mediaPlayer?.isLooping = true
         mediaPlayer?.start()
     }
 
     fun playOneShot(resourceId: Int) {
-        stopMusic() // Detener cualquier música anterior
+        stopMusic()
         mediaPlayer = MediaPlayer.create(context, resourceId)
         mediaPlayer?.isLooping = false
         mediaPlayer?.start()
