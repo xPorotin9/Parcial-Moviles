@@ -1,17 +1,25 @@
 package com.example.parcial
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.parcial.databinding.FragmentQuestionBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
+import com.example.parcial.databinding.FragmentQuestionBinding
 
 class QuestionFragment : Fragment() {
     private var _binding: FragmentQuestionBinding? = null
@@ -26,6 +34,14 @@ class QuestionFragment : Fragment() {
         R.raw.once,
         R.raw.esencia
     )
+
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            provideErrorFeedback()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +88,7 @@ class QuestionFragment : Fragment() {
                 }
                 binding.answersRadioGroup.addView(radioButton)
             }
+            binding.answersRadioGroup.clearCheck()
         }
 
         viewModel.timeRemaining.observe(viewLifecycleOwner) { timeRemaining ->
@@ -82,6 +99,7 @@ class QuestionFragment : Fragment() {
         viewModel.currentQuestionIndex.observe(viewLifecycleOwner) { index ->
             binding.progressTextView.text = getString(R.string.question_progress, index + 1, 6)
             playCurrentQuestionSound()
+            binding.answersRadioGroup.clearCheck()
         }
 
         viewModel.answerResult.observe(viewLifecycleOwner) { result ->
@@ -105,8 +123,76 @@ class QuestionFragment : Fragment() {
             if (selectedAnswerId != -1) {
                 viewModel.submitAnswer(selectedAnswerId)
             } else {
-                Toast.makeText(context, "Escoge una respuesta", Toast.LENGTH_SHORT).show()
+                checkVibrationPermissionAndProvideErrorFeedback()
             }
+        }
+    }
+
+    private fun checkVibrationPermissionAndProvideErrorFeedback() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.VIBRATE
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                provideErrorFeedback()
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.VIBRATE) -> {
+                showPermissionRationaleDialog()
+            }
+            else -> {
+                requestPermissionLauncher.launch(Manifest.permission.VIBRATE)
+            }
+        }
+    }
+
+    private fun showPermissionRationaleDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Permiso necesario")
+            .setMessage("Necesitamos el permiso de vibración para proporcionar feedback táctil")
+            .setPositiveButton("Solicitar permiso") { _, _ ->
+                requestPermissionLauncher.launch(Manifest.permission.VIBRATE)
+            }
+            .setNegativeButton("No gracias") { dialog, _ ->
+                dialog.dismiss()
+                showErrorSnackbar()
+            }
+            .show()
+    }
+
+    private fun provideErrorFeedback() {
+        showErrorSnackbar()
+
+        try {
+            val vibrator = requireContext().getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vibrator.vibrate(VibrationEffect.createOneShot(200, VibrationEffect.DEFAULT_AMPLITUDE))
+            } else {
+                @Suppress("DEPRECATION")
+                vibrator.vibrate(200)
+            }
+        } catch (e: Exception) {
+            // Si hay algún problema con la vibración, al menos el Snackbar se mostrará
+        }
+    }
+
+    private fun showErrorSnackbar() {
+        Snackbar.make(
+            binding.root,
+            "Debes seleccionar una respuesta antes de continuar",
+            Snackbar.LENGTH_SHORT
+        ).apply {
+            setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.error_color))
+            setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+            setActionTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        }.show()
+    }
+
+    private fun moveToNextQuestion() {
+        binding.answersRadioGroup.clearCheck()
+        if (viewModel.currentQuestionIndex.value!! < 4) {
+            viewModel.moveToNextQuestion()
+        } else {
+            findNavController().navigate(R.id.action_questionFragment_to_resultFragment)
         }
     }
 
@@ -131,11 +217,7 @@ class QuestionFragment : Fragment() {
             .setPositiveButton("Continuar") { dialog, _ ->
                 dialog.dismiss()
                 musicManager.stopMusic()
-                if (viewModel.currentQuestionIndex.value!! < 4) {
-                    viewModel.moveToNextQuestion()
-                } else {
-                    findNavController().navigate(R.id.action_questionFragment_to_resultFragment)
-                }
+                moveToNextQuestion()
             }
             .setCancelable(false)
             .show()

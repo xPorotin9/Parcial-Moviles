@@ -8,4 +8,5 @@
     <color name="dragon_ball_yellow_dark">#FFA000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="error_color">#B00020</color>
 </resources>
