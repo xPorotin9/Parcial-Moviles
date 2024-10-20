@@ -102,16 +102,16 @@ class QuestionFragment : Fragment() {
             if (selectedAnswerId != -1) {
                 viewModel.submitAnswer(selectedAnswerId)
             } else {
-                Toast.makeText(context, "Por favor selecciona una respuesta", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Escoge una respuesta", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun showAnswerResult(result: AnswerResult) {
         val title = when {
-            result.timeOut -> "¡Tiempo agotado!"
-            result.isCorrect -> "¡Respuesta Correcta!"
-            else -> "¡Respuesta Incorrecta!"
+            result.timeOut -> "Muy lento chamo"
+            result.isCorrect -> "Tan cerebro!?"
+            else -> "No se sabes!"
         }
 
         val message = buildString {
@@ -119,7 +119,7 @@ class QuestionFragment : Fragment() {
                 appendLine("La respuesta correcta era: ${result.correctAnswer}")
                 appendLine()
             }
-            append("Explicación: ${result.explanation}")
+            append("De hecho: ${result.explanation}")
         }
 
         MaterialAlertDialogBuilder(requireContext())
