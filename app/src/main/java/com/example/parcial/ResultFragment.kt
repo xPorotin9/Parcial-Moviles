@@ -37,7 +37,7 @@ class ResultFragment : Fragment() {
         // Observa los cambios en la puntuación del quiz y actualiza la UI
         viewModel.score.observe(viewLifecycleOwner) { score ->
             // Actualiza el texto de la puntuación en la interfaz
-            binding.scoreTextView.text = getString(R.string.final_score, score, 6)
+            binding.scoreTextView.text = getString(R.string.final_score, score, 5)
 
             // Configura el resultado basado en la puntuación obtenida
             val (imageRes, titleText, message) = when (score) {
